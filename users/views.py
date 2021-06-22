@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
@@ -59,7 +57,7 @@ def profile(request):
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=user)
-    context = {'title': 'GeekShop - Профиль', 'form': form, 'baskets': Basket.objects.filter(user=user)}
+    context = {'title': 'GeekShop - Профиль', 'form': form}
     return render(request, 'users/profile.html', context)
 
 
