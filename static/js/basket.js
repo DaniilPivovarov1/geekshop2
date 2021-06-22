@@ -1,0 +1,14 @@
+window.onload = function () {
+    $('.baskets_list').on('click', 'input[type="number"]', function (event) {
+        let t_href = event.target;
+        console.log(t_href.name); // ID корзины
+        console.log(t_href.value); // Кол-во товаров в корзине
+        $.ajax({
+            url: '/baskets/edit/' + t_href.name + '/' + t_href.value + '/',
+            success: function (data) {
+                $('.baskets_list').html(data.result);
+            }
+        });
+        event.preventDefault();
+    })
+}
