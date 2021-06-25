@@ -14,7 +14,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         return
 
     api_url = urlunparse(('https', 'api.vk.com', '/method/users.get', None,
-                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about')),
+                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'photo_100')),
                                                 access_token=response['access_token'], v='5.92')), None))
 
     resp = requests.get(api_url)
@@ -23,7 +23,6 @@ def save_user_profile(backend, user, response, *args, **kwargs):
 
     data = resp.json()['response'][0]
     if data['sex']:
-        print(data['sex'])
         if data['sex'] == 1:
             user.userprofile.gender = UserProfile.FEMALE
         elif data['sex'] == 2:
@@ -40,5 +39,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
             user.delete()
             raise AuthForbidden('social_core.backends.vk.VKOAuth2')
         user.userprofile.age = age
+    if data['photo_100']:
+        user.image = data['photo_100']
 
     user.save()
