@@ -21,8 +21,8 @@ class UserProfile(models.Model):
     FEMALE = 'W'
 
     GENDER_CHOICES = (
-        (MALE, 'лю'),
-        (FEMALE, 'лќ'),
+        (MALE, 'М'),
+        (FEMALE, 'Ж'),
     )
 
     user = models.OneToOneField(User, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
