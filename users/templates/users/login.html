@@ -2,7 +2,8 @@
 {% block content %}
     <div class="col-lg-5">
         {% if messages or form.errors %}
-            <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show" role="alert"
+            <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show"
+                 role="alert"
                  style="margin-top: 50px;">
                 {% if messages %}
                     {% for message in messages %}
@@ -37,6 +38,9 @@
                         <input class="btn btn-primary" type="submit" value="Авторизоваться">
                     </div>
                 </form>
+            </div>
+            <div class="card-footer text-center">
+                <div class="small"><a href="{% url 'social:begin' 'vk-oauth2' %}?next=/">Вход через ВК</a></div>
             </div>
             <div class="card-footer text-center">
                 <div class="small"><a href="{% url 'users:register' %}">Нужен аккаунт? Зарегистрируйся!</a></div>
