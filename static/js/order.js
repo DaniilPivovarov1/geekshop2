@@ -40,18 +40,8 @@ document.querySelector('.order_form').querySelectorAll('input[type="number"]').f
 });
 
 document.querySelector('.order_form').querySelectorAll('input[type="checkbox"]').forEach(function (inp) {
-    inp.addEventListener('click', function (event) {
-        let target = event.target;
-        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-DELETE', ''));
-        if (target.checked) {
-            delta_quantity = -quantity_arr[orderitem_num];
-        } else {
-            delta_quantity = quantity_arr[orderitem_num];
-        }
-        orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
-    })
+    inp.addEventListener('click', deleteOrderItem)
 });
-
 
 function orderSummaryUpdate(orderitem_price, delta_quantity) {
     delta_cost = orderitem_price * delta_quantity;
@@ -61,4 +51,18 @@ function orderSummaryUpdate(orderitem_price, delta_quantity) {
 
     document.querySelector('.order_total_cost').innerHTML = order_total_cost.toString();
     document.querySelector('.order_total_quantity').innerHTML = order_total_quantity.toString();
+}
+
+$('.formset_row').formset({
+   addText: 'добавить продукт',
+   deleteText: 'удалить',
+   prefix: 'orderitems',
+   removed: deleteOrderItem
+})
+
+function deleteOrderItem(row) {
+   let target_name = row[0].querySelector('input[type="number"]').name;
+   orderitem_num = parseInt(target_name.replace('orderitems-', '').replace('-quantity', ''));
+   delta_quantity = -quantity_arr[orderitem_num];
+   orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
 }
