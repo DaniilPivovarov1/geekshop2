@@ -1,0 +1,49 @@
+{% extends 'admins/base.html' %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid">
+            <h1 class="mt-4">Редактирование заказа</h1>
+            <div class="card-body">
+                <form action="{% url 'admins:admin_orders_update' order.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="small mb-1" for="{{ form.status.id_for_label }}">Статус</label>
+                                {{ form.status }}
+                            </div>
+                            <div class="form-group">
+                                <label class="small mb-1" for="{{ form.is_active.id_for_label }}">Активный</label>
+                                {{ form.is_active }}
+                            </div>
+                        </div>
+                    </div>
+                    {% if order.is_active %}
+                        <div class="form-row">
+                            <div class="col-lg-12" style="margin-top: 33px;">
+                                <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+                            </div>
+                        </div>
+                    {% endif %}
+                </form>
+                <div class="row">
+                    <div class="col-lg-12" style="margin-top: 33px;">
+                        {% if order.is_active %}
+                            <form action="{% url 'admins:admin_orders_delete' order.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger btn-block" value="Удалить">
+                            </form>
+                        {% else %}
+                            <button class="btn btn-info btn-round form-control last">
+                                <a href="{% url 'admins:admin_orders' %}">
+                                    К списку заказов
+                                </a>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

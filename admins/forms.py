@@ -3,6 +3,8 @@ from django import forms
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
+from orders.forms import Order
+
 
 class UserAdminRegisterForm(UserRegisterForm):
     image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
@@ -15,3 +17,9 @@ class UserAdminRegisterForm(UserRegisterForm):
 class UserAdminProfileForm(UserProfileForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4', 'readonly': False}))
     email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control py-4', 'readonly': False}))
+
+
+class OrderAdminUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        exclude = ('user', 'created', 'updated')
