@@ -1,12 +1,13 @@
+from django.conf import settings
+from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
 
-from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
-from baskets.models import Basket
 
 
 def login(request):
@@ -26,16 +27,18 @@ def login(request):
     return render(request, 'users/login.html', context)
 
 
-class UserCreateView(CreateView):
-    model = User
-    template_name = 'users/register.html'
-    form_class = UserRegisterForm
-    success_url = reverse_lazy('users:login')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(UserCreateView, self).get_context_data(**kwargs)
-        context['title'] = 'GeekShop - Регистрация'
-        return context
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            send_verify_link(user)
+            messages.success(request, 'Вы успешно зарегистрировались!')
+            return HttpResponseRedirect(reverse('users:login'))
+    else:
+        form = UserRegisterForm()
+    context = {'title': 'GeekShop - Регистрация', 'form': form}
+    return render(request, 'users/register.html', context)
 
 
 def logout(request):
@@ -43,16 +46,38 @@ def logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
+@transaction.atomic
 @login_required
 def profile(request):
     user = request.user
     if request.method == 'POST':
         form = UserProfileForm(data=request.POST, files=request.FILES, instance=user)
-        if form.is_valid():
+        profile_form = UserProfileEditForm(request.POST, instance=request.user.userprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
             messages.success(request, 'Вы успешно изменили данные профиля!')
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=user)
-    context = {'title': 'GeekShop - Профиль', 'form': form, 'baskets': Basket.objects.filter(user=user)}
+        profile_form = UserProfileEditForm(instance=request.user.userprofile)
+    context = {'title': 'GeekShop - Профиль', 'form': form, 'profile_form': profile_form}
     return render(request, 'users/profile.html', context)
+
+
+def send_verify_link(user):
+    verify_link = reverse('users:verify', args=[user.email, user.activation_key])
+    subject = 'Account verify'
+    message = f'Your link for account activation: {settings.DOMAIN_NAME}{verify_link}'
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+
+def verify(request, email, key):
+    user = User.objects.filter(email=email).first()
+    if user and user.activation_key == key and not user.is_activation_key_expired():
+        user.is_active = True
+        user.activation_key = ''
+        user.activation_key_created = None
+        user.save()
+        auth.login(request, user)
+    print(request.user.is_authenticated)
+    return render(request, 'users/verify.html')

@@ -1,0 +1,19 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <div class="alert {% if user.is_authenticated %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show"
+         role="alert"
+         style="margin-top: 50px;">
+        {% if user.is_authenticated %}
+            <h1>Поздравляем!</h1>
+            <p>Вы успешно активировали аккаунт!</p>
+        {% else %}
+            <h1>Что-то пошло не так</h1>
+            <p>К сожалению, активация аккаунта не удалась. Обратитесь в поддержку.</p>
+        {% endif %}
+        <a href="{% url 'index' %}">На главную</a>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endblock %}
