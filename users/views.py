@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
-from baskets.models import Basket
 
 
 def login(request):
@@ -46,18 +46,21 @@ def logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
+@transaction.atomic
 @login_required
 def profile(request):
     user = request.user
     if request.method == 'POST':
         form = UserProfileForm(data=request.POST, files=request.FILES, instance=user)
-        if form.is_valid():
+        profile_form = UserProfileEditForm(request.POST, instance=request.user.userprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
             messages.success(request, 'Вы успешно изменили данные профиля!')
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=user)
-    context = {'title': 'GeekShop - Профиль', 'form': form}
+        profile_form = UserProfileEditForm(instance=request.user.userprofile)
+    context = {'title': 'GeekShop - Профиль', 'form': form, 'profile_form': profile_form}
     return render(request, 'users/profile.html', context)
 
 

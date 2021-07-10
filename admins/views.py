@@ -6,7 +6,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 
 from users.models import User
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
+from orders.models import Order
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, OrderAdminUpdateForm
 
 
 @user_passes_test(lambda u: u.is_staff or u.is_superuser)
@@ -90,3 +91,50 @@ class UserReturnView(UpdateView):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(UserReturnView, self).dispatch(request, *args, **kwargs)
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'admins/admin-orders-read.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(OrderListView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Заказы'
+        return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderListView, self).dispatch(request, *args, **kwargs)
+
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    template_name = 'admins/admin-orders-update-delete.html'
+    form_class = OrderAdminUpdateForm
+    success_url = reverse_lazy('admins:admin_orders')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(OrderUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Обновление заказа'
+        return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderUpdateView, self).dispatch(request, *args, **kwargs)
+
+
+class OrderDeleteView(DeleteView):
+    model = Order
+    template_name = 'admins/admin-orders-update-delete.html'
+    success_url = reverse_lazy('admins:admin_orders')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.status = Order.CANCEL
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderDeleteView, self).dispatch(request, *args, **kwargs)
