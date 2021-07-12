@@ -1,0 +1,67 @@
+siege -f /home/django/geekshop/urls.txt -d0 -r50 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   6000 hits
+Availability:                 100.00 %
+Elapsed time:                  12.71 secs
+Data transferred:             475.84 MB
+Response time:                  0.10 secs
+Transaction rate:             472.07 trans/sec
+Throughput:                    37.44 MB/sec
+Concurrency:                   48.69
+Successful transactions:        3700
+Failed transactions:               0
+Longest transaction:            1.12
+Shortest transaction:           0.00
+
+siege -f /home/django/geekshop/urls.txt -d0 -r25 -c100
+** SIEGE 4.0.4
+** Preparing 100 concurrent users for battle.
+The server is now under siege...
+Transactions:                   6000 hits
+Availability:                 100.00 %
+Elapsed time:                  12.52 secs
+Data transferred:             475.84 MB
+Response time:                  0.19 secs
+Transaction rate:             479.23 trans/sec
+Throughput:                    38.01 MB/sec
+Concurrency:                   92.69
+Successful transactions:        3700
+Failed transactions:               0
+Longest transaction:            2.10
+Shortest transaction:           0.00
+
+siege -f /home/django/geekshop/urls.txt -d0 -r17 -c150
+** SIEGE 4.0.4
+** Preparing 150 concurrent users for battle.
+The server is now under siege...
+Transactions:                   6600 hits
+Availability:                 100.00 %
+Elapsed time:                  13.80 secs
+Data transferred:             713.59 MB
+Response time:                  0.26 secs
+Transaction rate:             478.26 trans/sec
+Throughput:                    51.71 MB/sec
+Concurrency:                  124.20
+Successful transactions:        4350
+Failed transactions:               0
+Longest transaction:            2.48
+Shortest transaction:           0.00
+
+siege -f /home/django/geekshop/urls.txt -d0 -r12 -c200
+** SIEGE 4.0.4
+** Preparing 200 concurrent users for battle.
+The server is now under siege...
+Transactions:                   6800 hits
+Availability:                 100.00 %
+Elapsed time:                  14.05 secs
+Data transferred:             951.31 MB
+Response time:                  0.37 secs
+Transaction rate:             483.99 trans/sec
+Throughput:                    67.71 MB/sec
+Concurrency:                  179.20
+Successful transactions:        4800
+Failed transactions:               0
+Longest transaction:            4.69
+Shortest transaction:           0.00
