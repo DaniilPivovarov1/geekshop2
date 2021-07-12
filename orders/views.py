@@ -4,6 +4,9 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.db import transaction
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 from django.forms import inlineformset_factory
 
@@ -27,6 +30,10 @@ class OrderList(ListView):
         data['title'] = 'заказы'
 
         return data
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderList, self).dispatch(*args, **kwargs)
 
 
 class OrderCreate(CreateView):
@@ -73,6 +80,10 @@ class OrderCreate(CreateView):
 
         return super(OrderCreate, self).form_valid(form)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderCreate, self).dispatch(*args, **kwargs)
+
 
 class OrderUpdate(UpdateView):
     model = Order
@@ -109,6 +120,10 @@ class OrderUpdate(UpdateView):
 
         return super(OrderUpdate, self).form_valid(form)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderUpdate, self).dispatch(*args, **kwargs)
+
 
 class OrderDelete(DeleteView):
     model = Order
@@ -122,6 +137,10 @@ class OrderRead(DetailView):
         context = super(OrderRead, self).get_context_data(**kwargs)
         context['title'] = 'заказ/просмотр'
         return context
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderRead, self).dispatch(*args, **kwargs)
 
 
 def forming_complete(request, pk):
