@@ -6,3 +6,4 @@ requests
 django-debug-toolbar
 django-extensions
 pydotplus
+django-debug-toolbar
