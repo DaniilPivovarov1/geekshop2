@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.db import transaction
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 
 from django.forms import inlineformset_factory
@@ -140,6 +141,7 @@ class OrderRead(DetailView):
         return context
 
     @method_decorator(login_required())
+    @method_decorator(cache_page(600))
     def dispatch(self, *args, **kwargs):
         return super(OrderRead, self).dispatch(*args, **kwargs)
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.cache import cache_page
 
 from products.models import Product, ProductCategory
 
@@ -35,6 +36,7 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
+@cache_page(3600)
 def products(request, category_id=None, page=1):
     paginator = Paginator(Product.objects.filter(category_id=category_id) if category_id else get_products(), 3)
     try:
