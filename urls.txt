@@ -6,7 +6,7 @@ http://5.63.152.56/products/category/3/
 http://5.63.152.56/products/category/4/
 http://5.63.152.56/baskets/
 http://5.63.152.56/orders/
-http://5.63.152.56/users/edit/ POST username=user1&password=geekbrains
+http://5.63.152.56/users/edit/ POST username=django&password=Geekbrains2021
 http://5.63.152.56/orders/update/30/
 http://5.63.152.56/orders/update/29/
 http://5.63.152.56/orders/update/27/

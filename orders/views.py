@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.db import transaction
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 
 from django.forms import inlineformset_factory
@@ -75,7 +76,7 @@ class OrderCreate(CreateView):
                 orderitems.instance = self.object
                 orderitems.save()
 
-        if self.object.get_total_cost() == 0:
+        if self.object.get_summary()['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderCreate, self).form_valid(form)
@@ -116,7 +117,7 @@ class OrderUpdate(UpdateView):
                 orderitems.instance = self.object
                 orderitems.save()
 
-        if self.object.get_total_cost() == 0:
+        if self.object.get_summary()['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderUpdate, self).form_valid(form)
@@ -140,6 +141,7 @@ class OrderRead(DetailView):
         return context
 
     @method_decorator(login_required())
+    @method_decorator(cache_page(600))
     def dispatch(self, *args, **kwargs):
         return super(OrderRead, self).dispatch(*args, **kwargs)
 
@@ -156,7 +158,7 @@ def forming_complete(request, pk):
 @receiver(pre_save, sender=Basket)
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
     if instance.pk:
-        instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        instance.product.quantity -= instance.quantity - sender.objects.get(pk=instance.pk).quantity
     else:
         instance.product.quantity -= instance.quantity
     instance.product.save()
