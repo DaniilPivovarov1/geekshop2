@@ -1,0 +1,118 @@
+siege http://5.63.152.56/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   8750 hits
+Availability:                 100.00 %
+Elapsed time:                   7.31 secs
+Data transferred:             418.70 MB
+Response time:                  0.04 secs
+Transaction rate:            1196.99 trans/sec
+Throughput:                    57.28 MB/sec
+Concurrency:                   48.79
+Successful transactions:        8750
+Failed transactions:               0
+Longest transaction:            0.61
+Shortest transaction:           0.00
+
+siege http://5.63.152.56/products/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                  16250 hits
+Availability:                 100.00 %
+Elapsed time:                  35.21 secs
+Data transferred:            5525.21 MB
+Response time:                  0.11 secs
+Transaction rate:             461.52 trans/sec
+Throughput:                   156.92 MB/sec
+Concurrency:                   48.64
+Successful transactions:       16250
+Failed transactions:               0
+Longest transaction:            1.20
+Shortest transaction:           0.00
+
+siege http://5.63.152.56/products/category/1/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   1250 hits
+Availability:                 100.00 %
+Elapsed time:                   2.96 secs
+Data transferred:               0.18 MB
+Response time:                  0.12 secs
+Transaction rate:             422.30 trans/sec
+Throughput:                     0.06 MB/sec
+Concurrency:                   48.83
+Successful transactions:           0
+Failed transactions:               0
+Longest transaction:            0.16
+Shortest transaction:           0.00
+
+siege http://5.63.152.56/baskets/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   1250 hits
+Availability:                 100.00 %
+Elapsed time:                   2.94 secs
+Data transferred:               0.18 MB
+Response time:                  0.11 secs
+Transaction rate:             425.17 trans/sec
+Throughput:                     0.06 MB/sec
+Concurrency:                   48.14
+Successful transactions:           0
+Failed transactions:               0
+Longest transaction:            0.18
+Shortest transaction:           0.00
+
+siege http://5.63.152.56/orders/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   2500 hits
+Availability:                 100.00 %
+Elapsed time:                   5.83 secs
+Data transferred:               0.18 MB
+Response time:                  0.12 secs
+Transaction rate:             428.82 trans/sec
+Throughput:                     0.03 MB/sec
+Concurrency:                   49.35
+Successful transactions:        1250
+Failed transactions:               0
+Longest transaction:            0.27
+Shortest transaction:           0.01
+
+siege http://5.63.152.56/orders/update/24/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   2500 hits
+Availability:                 100.00 %
+Elapsed time:                   5.70 secs
+Data transferred:               0.18 MB
+Response time:                  0.11 secs
+Transaction rate:             438.60 trans/sec
+Throughput:                     0.03 MB/sec
+Concurrency:                   49.19
+Successful transactions:        1250
+Failed transactions:               0
+Longest transaction:            0.15
+Shortest transaction:           0.01
+
+siege http://5.63.152.56/orders/read/24/ -d0 -r25 -c50
+** SIEGE 4.0.4
+** Preparing 50 concurrent users for battle.
+The server is now under siege...
+Transactions:                   2500 hits
+Availability:                 100.00 %
+Elapsed time:                   6.00 secs
+Data transferred:               0.18 MB
+Response time:                  0.12 secs
+Transaction rate:             416.67 trans/sec
+Throughput:                     0.03 MB/sec
+Concurrency:                   49.24
+Successful transactions:        1250
+Failed transactions:               0
+Longest transaction:            0.18
+Shortest transaction:           0.02

@@ -5,6 +5,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
@@ -46,6 +47,7 @@ def logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
+@cache_page(300)
 @transaction.atomic
 @login_required
 def profile(request):

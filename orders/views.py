@@ -4,6 +4,10 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.db import transaction
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+
 
 from django.forms import inlineformset_factory
 
@@ -27,6 +31,10 @@ class OrderList(ListView):
         data['title'] = 'заказы'
 
         return data
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderList, self).dispatch(*args, **kwargs)
 
 
 class OrderCreate(CreateView):
@@ -68,10 +76,14 @@ class OrderCreate(CreateView):
                 orderitems.instance = self.object
                 orderitems.save()
 
-        if self.object.get_total_cost() == 0:
+        if self.object.get_summary()['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderCreate, self).form_valid(form)
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderCreate, self).dispatch(*args, **kwargs)
 
 
 class OrderUpdate(UpdateView):
@@ -85,7 +97,8 @@ class OrderUpdate(UpdateView):
         if self.request.POST:
             data['orderitems'] = OrderFormSet(self.request.POST, instance=self.object)
         else:
-            formset = OrderFormSet(instance=self.object)
+            queryset = self.object.orderitems.select_related()
+            formset = OrderFormSet(instance=self.object, queryset=queryset)
             for form in formset.forms:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
@@ -104,10 +117,14 @@ class OrderUpdate(UpdateView):
                 orderitems.instance = self.object
                 orderitems.save()
 
-        if self.object.get_total_cost() == 0:
+        if self.object.get_summary()['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderUpdate, self).form_valid(form)
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(OrderUpdate, self).dispatch(*args, **kwargs)
 
 
 class OrderDelete(DeleteView):
@@ -123,6 +140,11 @@ class OrderRead(DetailView):
         context['title'] = 'заказ/просмотр'
         return context
 
+    @method_decorator(login_required())
+    @method_decorator(cache_page(600))
+    def dispatch(self, *args, **kwargs):
+        return super(OrderRead, self).dispatch(*args, **kwargs)
+
 
 def forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
@@ -136,7 +158,7 @@ def forming_complete(request, pk):
 @receiver(pre_save, sender=Basket)
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
     if instance.pk:
-        instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        instance.product.quantity -= instance.quantity - sender.objects.get(pk=instance.pk).quantity
     else:
         instance.product.quantity -= instance.quantity
     instance.product.save()

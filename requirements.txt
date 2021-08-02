@@ -4,3 +4,6 @@ django
 social_auth_app_django
 requests
 django-debug-toolbar
+django-extensions
+pydotplus
+django-debug-toolbar
