@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import render, HttpResponseRedirect
@@ -184,6 +185,14 @@ class ProductCategoryUpdateView(UpdateView):
         context['title'] = 'GeekShop - Админ | Обновление Категории'
         context['category'] = self.object
         return context
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+
+        return super().form_valid(form)
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
