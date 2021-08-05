@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)rmvis)36j__k12h&z2%9!%dotmv1_$2vc30zqrey($ltn%9ij'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'admins',
     'social_django',
     'orders',
-    # 'debug_toolbar',
-    # 'template_profiler_panel',
+    'debug_toolbar',
+    'template_profiler_panel',
     'django_extensions',
 ]
 
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
