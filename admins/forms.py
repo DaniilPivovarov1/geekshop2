@@ -1,5 +1,6 @@
 from django import forms
 
+from products.models import ProductCategory
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
@@ -23,3 +24,17 @@ class OrderAdminUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
         exclude = ('user', 'created', 'updated')
+
+
+class CategoryAdminCreateForm(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        exclude = ('is_active',)
+
+
+class CategoryAdminUpdateForm(forms.ModelForm):
+    discount = forms.IntegerField(label='скидка', required=False, min_value=0, max_value=90, initial=0)
+
+    class Meta:
+        model = ProductCategory
+        exclude = ('is_active',)

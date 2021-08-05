@@ -12,6 +12,9 @@ from users.models import User
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
         if form.is_valid():
@@ -47,7 +50,6 @@ def logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
-@cache_page(300)
 @transaction.atomic
 @login_required
 def profile(request):
@@ -80,6 +82,6 @@ def verify(request, email, key):
         user.activation_key = ''
         user.activation_key_created = None
         user.save()
-        auth.login(request, user)
+        auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     print(request.user.is_authenticated)
     return render(request, 'users/verify.html')
